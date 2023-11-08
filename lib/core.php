@@ -10,8 +10,8 @@ class UltimateMemberCustom
 
     public static function showUserUploadFile()
     {
-        add_action('show_user_profile', '__showUserUploadFile');
-        // add_action('edit_user_profile', '__showUserUploadFile');
+        add_action('show_user_profile', '__showUserUploadFile', 1);
+        add_action('edit_user_profile', '__showUserUploadFile', 1);
 
         function __showUserUploadFile($user)
         { ?>
@@ -34,20 +34,23 @@ class UltimateMemberCustom
                         <ul tabindex="-1" class="attachments ui-sortable ui-sortable-disabled" id="__attachments-view-47">
 
 
-                            <?php foreach ($files as $file) : ?>
+                            <?php foreach ($files as $index => $file) : ?>
                                 <?php
+                                $id = $index + 1;
                                 $file = str_replace("\\", "/", $file);
                                 $fileName = end(explode("/", $file));
-                                $fileExt = end(explode(".", $fileName));
+                                // $fileExt = end(explode(".", $fileName));
                                 $fileUrl = esc_url(str_replace($baseDir, $baseUrl, $file));
 
                                 ?>
                                 <div class="block-item">
-                                    <li data-url="<?php echo $fileUrl; ?>" tabindex="0" role="checkbox" aria-checked="false" class="attachment file-prevew">
+                                
+                                    <li data-id="<?php echo $id; ?>" data-url="<?php echo $fileUrl; ?>" tabindex="0" role="checkbox" aria-checked="false" class="attachment file-prevew">
+                                    <iframe src="" frameborder="0" class="iframeShow"></iframe>
                                         <div class="attachment-preview js--select-attachment type-application subtype-pdf landscape">
                                             <div class="thumbnail">
                                                 <div class="centered">
-                                                    <iframe style="height: 100%;" src="<?php echo $fileUrl; ?>" class="icon image" frameborder="0"></iframe>
+                                                    <iframe style="height: 100%;" src="<?php echo $fileUrl; ?>" class="preview icon image" frameborder="0"></iframe>
                                                 </div>
                                                 <div class="filename">
                                                     <div><?php echo $fileName; ?></div>
@@ -67,7 +70,6 @@ class UltimateMemberCustom
 
                 </tr>
             </table>
-            <iframe src="" frameborder="0" id="preview"></iframe>
             <input class="button button-primary" type="button" value="Close" id="close-preview">
             <style>
                 .image {
@@ -82,13 +84,13 @@ class UltimateMemberCustom
                 .hide {
                     display: none !important;
                 }
-                #preview{
+                .iframeShow{
                     display: none;
                 }
-                #preview.live {
+                .iframeShow.live {
                     display: block;
                     position: fixed;
-                    top: 8%;
+                    top: 1%;
                     bottom: 5%;
                     height: 85%;
                     left: 0;
@@ -123,16 +125,23 @@ class UltimateMemberCustom
                     $('.file-prevew').click(function() {
                         // const fileUrl = $(this).data('url');
                         // window.open(fileUrl, '_blank');
-                        const iframe = $(this).find('iframe');
-                        $('#preview').attr('src', iframe.attr('src'));
-                        $('#preview').addClass('live');
-                        $('#close-preview').addClass('live');
+                        const iframe = $(this).find('iframe.preview');
+                        const iframeShow = $(this).find('.iframeShow');
+                        if(typeof iframeShow.attr('src') === 'undefined' || iframeShow.attr('src') === ''){
+                            iframeShow.attr('src', iframe.attr('src'));
+                        }
+                        iframeShow.addClass('live');
+
+                        const btnClose =  $('#close-preview');
+                        btnClose.data('id', $(this).data('id'));
+                        btnClose.addClass('live');
                     });
 
                     $("#close-preview").click(function(e) {
-                        $('#close-preview').removeClass('live');
-                        $('#preview').removeClass('live');
-                        $("#preview").contents().find("body").html("");
+                        const btnClose =  $('#close-preview');
+                        const id = btnClose.data('id');
+                        btnClose.removeClass('live');
+                        $('.file-prevew[data-id="'+id+'"]').find('.iframeShow').removeClass('live');
                     });
 
                 })(jQuery);
