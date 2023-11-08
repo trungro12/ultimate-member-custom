@@ -14,8 +14,10 @@ class UltimateMemberCustom
         add_action('edit_user_profile', '__showUserUploadFile', 1);
 
         function __showUserUploadFile($user)
-        { ?>
-            <h3><?php _e("File Upload khi đăng ký (từ plugin Ultimate Member)"); ?></h3>
+        {
+            $title = 'File Upload khi đăng ký (từ plugin Ultimate Member), hỗ trợ các file có đuôi ' . '<b style="color:red">'.implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE).'</b>';
+            ?>
+            <h3><?php _e($title); ?></h3>
             <?php
             $userId = $user->ID;
             $uploads = wp_upload_dir();
@@ -39,7 +41,10 @@ class UltimateMemberCustom
                                 $id = $index + 1;
                                 $file = str_replace("\\", "/", $file);
                                 $fileName = end(explode("/", $file));
-                                // $fileExt = end(explode(".", $fileName));
+                                $fileExt = strtolower(trim(end(explode(".", $fileName))));
+
+                                if(!in_array($fileExt, ULTIMATEMEMBER_CUSTOM__FILETYPE)) continue;
+
                                 $fileUrl = esc_url(str_replace($baseDir, $baseUrl, $file));
 
                                 ?>

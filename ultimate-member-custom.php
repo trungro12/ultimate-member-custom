@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package UltimateMemberCustom
  */
@@ -12,13 +13,13 @@ Author: Trung Pham
 License: GPLv2 or later
 */
 
-if ( !function_exists( 'add_action' ) ) {
+if (!function_exists('add_action')) {
 	echo 'Không thể chạy phugins trong website!';
 	exit;
 }
-
-define( 'ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'ULTIMATEMEMBER_CUSTOM__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define('ULTIMATEMEMBER_CUSTOM__FILETYPE', ['pdf', 'txt']);
+define('ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('ULTIMATEMEMBER_CUSTOM__PLUGIN_URL', plugin_dir_url(__FILE__));
 
 require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/core.php');
-add_action( 'init', array( 'UltimateMemberCustom', 'init' ) );
+add_action('init', array('UltimateMemberCustom', 'init'));
