@@ -14,7 +14,7 @@ License: GPLv2 or later
 */
 
 if (!function_exists('add_action')) {
-	echo 'Không thể chạy phugins trong website!';
+	echo 'Không thể chạy plugins trong website!';
 	exit;
 }
 define('ULTIMATEMEMBER_CUSTOM__FILETYPE', ['pdf', 'txt']);
