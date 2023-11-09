@@ -213,6 +213,7 @@ class UltimateMemberCustom
             $userId = !empty($_GET['user_id']) ? (int) $_GET['user_id'] : get_current_user_id();
             $isVerify = (int) get_user_meta($userId, 'is_verified', true);
         ?>
+        <h3><?php _e('Tình trạng'); ?></h3>
             <tr class="user-display-name-wrap">
                 <th>
                     <label for="is_verify">Tình trạng xác minh</label>
