@@ -3,20 +3,54 @@ class UltimateMemberCustom
 {
     public static function init()
     {
+
+        // woo
+        require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/coupons.php');
+        UltimateMemberCustom_Coupons::init();
+        self::checkUserIsVerifiedBeforeCheckout();
+
         if (!is_admin()) return;
-        self::showUserUploadFile();
+        self::showUserUploadFileField();
+        self::showUserVerifyField();
+        UltimateMemberCustom_Coupons::init_admin();
+    }
+
+    public static function checkUserIsVerifiedBeforeCheckout()
+    {
+        add_action('woocommerce_before_cart', 'customer_is_verify_displaying_message');
+        function customer_is_verify_displaying_message()
+        {
+            $userId = get_current_user_id();
+            $isVerify = (int) get_user_meta($userId, 'is_verified', true);
+            if ($isVerify < 1) {
+                $message = __('Tài khoản của bạn chưa được kích hoạt nên không thể mua hàng');
+                wc_add_notice($message, 'error');
+            }
+        }
+
+
+        add_action('template_redirect', 'customer_is_verify_redirect');
+        function customer_is_verify_redirect()
+        {
+            $userId = get_current_user_id();
+            $isVerify = (int) get_user_meta($userId, 'is_verified', true);
+            if (is_checkout() && $isVerify < 1) {
+                wp_safe_redirect(esc_url(wc_get_cart_url()));
+                exit;
+            }
+        }
     }
 
 
-    public static function showUserUploadFile()
+    public static function showUserUploadFileField()
     {
-        add_action('show_user_profile', '__showUserUploadFile', 1);
-        add_action('edit_user_profile', '__showUserUploadFile', 1);
+        add_action('show_user_profile', '__showUserUploadFileField', 1);
+        add_action('edit_user_profile', '__showUserUploadFileField', 1);
 
-        function __showUserUploadFile($user)
+        function __showUserUploadFileField($user)
         {
-            $title = 'File Upload khi đăng ký (từ plugin Ultimate Member), hỗ trợ các file có đuôi ' . '<b style="color:red">'.implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE).'</b>';
-            ?>
+            $title = 'File Upload khi đăng ký (từ plugin Ultimate Member), hỗ trợ các file có đuôi ' . '<b style="color:red">' . implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE) . '</b>';
+?>
             <h3><?php _e($title); ?></h3>
             <?php
             $userId = $user->ID;
@@ -43,15 +77,15 @@ class UltimateMemberCustom
                                 $fileName = end(explode("/", $file));
                                 $fileExt = strtolower(trim(end(explode(".", $fileName))));
 
-                                if(!in_array($fileExt, ULTIMATEMEMBER_CUSTOM__FILETYPE)) continue;
+                                if (!in_array($fileExt, ULTIMATEMEMBER_CUSTOM__FILETYPE)) continue;
 
                                 $fileUrl = esc_url(str_replace($baseDir, $baseUrl, $file));
 
                                 ?>
                                 <div class="block-item">
-                                
+
                                     <li data-id="<?php echo $id; ?>" data-url="<?php echo $fileUrl; ?>" tabindex="0" role="checkbox" aria-checked="false" class="attachment file-prevew">
-                                    <iframe src="" frameborder="0" class="iframeShow"></iframe>
+                                        <iframe src="" frameborder="0" class="iframeShow"></iframe>
                                         <div class="attachment-preview js--select-attachment type-application subtype-pdf landscape">
                                             <div class="thumbnail">
                                                 <div class="centered">
@@ -89,9 +123,11 @@ class UltimateMemberCustom
                 .hide {
                     display: none !important;
                 }
-                .iframeShow{
+
+                .iframeShow {
                     display: none;
                 }
+
                 .iframeShow.live {
                     display: block;
                     position: fixed;
@@ -132,26 +168,62 @@ class UltimateMemberCustom
                         // window.open(fileUrl, '_blank');
                         const iframe = $(this).find('iframe.preview');
                         const iframeShow = $(this).find('.iframeShow');
-                        if(typeof iframeShow.attr('src') === 'undefined' || iframeShow.attr('src') === ''){
+                        if (typeof iframeShow.attr('src') === 'undefined' || iframeShow.attr('src') === '') {
                             iframeShow.attr('src', iframe.attr('src'));
                         }
                         iframeShow.addClass('live');
 
-                        const btnClose =  $('#close-preview');
+                        const btnClose = $('#close-preview');
                         btnClose.data('id', $(this).data('id'));
                         btnClose.addClass('live');
                     });
 
                     $("#close-preview").click(function(e) {
-                        const btnClose =  $('#close-preview');
+                        const btnClose = $('#close-preview');
                         const id = btnClose.data('id');
                         btnClose.removeClass('live');
-                        $('.file-prevew[data-id="'+id+'"]').find('.iframeShow').removeClass('live');
+                        $('.file-prevew[data-id="' + id + '"]').find('.iframeShow').removeClass('live');
                     });
 
                 })(jQuery);
             </script>
 
+        <?php
+        }
+    }
+
+    public static function showUserVerifyField()
+    {
+        add_action('show_user_profile', '__showUserVerifyField', 1);
+        add_action('edit_user_profile', '__showUserVerifyField', 1);
+
+        add_action('show_user_profile_update', '__updateUserVerifyField', 10);
+        add_action('profile_update', '__updateUserVerifyField', 10);
+        add_action('edit_user_profile_update', '__updateUserVerifyField', 10);
+        function __updateUserVerifyField($user_id)
+        {
+            if (isset($_POST['is_verified'])) {
+                $isVerify = (int) $_POST['is_verified'];
+                update_user_meta($user_id, 'is_verified', $isVerify);
+            }
+        }
+
+        function __showUserVerifyField()
+        {
+            $userId = !empty($_GET['user_id']) ? (int) $_GET['user_id'] : get_current_user_id();
+            $isVerify = (int) get_user_meta($userId, 'is_verified', true);
+        ?>
+            <tr class="user-display-name-wrap">
+                <th>
+                    <label for="is_verify">Tình trạng xác minh</label>
+                </th>
+                <td>
+                    <select name="is_verified" id="is_verified">
+                        <option value="0" <?php echo $isVerify === 0 ? 'selected' : '' ?>>Chưa xác minh</option>
+                        <option value="1" <?php echo $isVerify === 1 ? 'selected' : '' ?>>Đã xác minh</option>
+                    </select>
+                </td>
+            </tr>
 <?php
         }
     }
