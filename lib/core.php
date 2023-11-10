@@ -10,6 +10,11 @@ class UltimateMemberCustom
         UltimateMemberCustom_Register::init();
 
         // woo
+
+        require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/myaccount.php');
+        UltimateMemberCustom_Woo_MyAccount::init();
+
+
         require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/coupons.php');
         UltimateMemberCustom_Coupons::init();
         self::checkUserIsVerifiedBeforeCheckout();
