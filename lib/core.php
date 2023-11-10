@@ -3,6 +3,11 @@ class UltimateMemberCustom
 {
     public static function init()
     {
+        require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/define.php');
+
+        // register page
+        require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/register.php');
+        UltimateMemberCustom_Register::init();
 
         // woo
         require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/coupons.php');
