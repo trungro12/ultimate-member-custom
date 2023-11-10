@@ -15,10 +15,10 @@ class UltimateMemberCustom_Woo_MyAccount
             add_rewrite_endpoint('business-info', EP_ROOT | EP_PAGES);
         });
 
-        add_filter( 'woocommerce_get_query_vars', function( $vars ) {
+        add_filter('woocommerce_get_query_vars', function ($vars) {
             $vars['business-info'] = 'business-info';
             return $vars;
-        } );
+        });
 
         // add_filter('query_vars', function () {
         //     $vars[] = 'business-info';
@@ -30,9 +30,47 @@ class UltimateMemberCustom_Woo_MyAccount
             return $items;
         });
 
-        
+
         add_action('woocommerce_account_business-info_endpoint', function () {
             require_once ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/template/business-info/index.php';
         });
+    }
+
+    static function uploadFile($fileData){
+
+        return self::__uploadFile($fileData);
+    }
+
+
+    static function __uploadFile($fileData)
+    {
+        $uploads = wp_upload_dir();
+        $uploadDir = $uploads['basedir'];
+        $uploadUrl = $uploads['baseurl'];
+        $userId = (int) get_current_user_id();
+
+        if (empty($userId)) return null;
+        $uploadDir .= "/ultimatemembercustom/$userId/";
+        $uploadUrl .= "/ultimatemembercustom/$userId/";
+
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $fileName = self::hashName(basename($fileData['name']));
+
+        $uploadFile = $uploadDir . $fileName;
+        $fileUrl = $uploadUrl . $fileName;
+        if (@move_uploaded_file($fileData['tmp_name'], $uploadFile)) {
+            return $fileUrl;
+        } else {
+            return null;
+        }
+    }
+
+
+    static function hashName($str)
+    {
+        return "document_" . md5($str . rand(1, 100)) . "_" . $str;
     }
 }

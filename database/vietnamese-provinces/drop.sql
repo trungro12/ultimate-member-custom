@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS wards;
+DROP TABLE IF EXISTS districts;
+DROP TABLE IF EXISTS provinces;

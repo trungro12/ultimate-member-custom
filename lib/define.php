@@ -15,10 +15,10 @@ const UMC_BUSINESS_TYPE_PATIENT = 9; //'Bệnh nhân';
 
 // == LOẠI GIẤY TỜ
 // NHÀ THUỐC
-const UMC_BUSINESS_PHARMACY_DOCUMENT_LICENSE = 1; // GIẤY PHÉP KINH DOANH
-const UMC_BUSINESS_PHARMACY_DOCUMENT_GPP = 2; // HỒ SƠ GPP
-const UMC_BUSINESS_PHARMACY_DOCUMENT_CERTIFICATE_OF_QUALIFICATION_FOR_PHARMACEUTICAL = 3; // GIẤY CHỨNG NHẠN ĐỦ ĐIỀU KIỆN KINH DOANH DƯỢC
-
+const UMC_BUSINESS_DOCUMENT_LICENSE = 1; // GIẤY PHÉP KINH DOANH
+const UMC_BUSINESS_DOCUMENT_GPP = 2; // HỒ SƠ GPP
+const UMC_BUSINESS_DOCUMENT_CERTIFICATE_OF_QUALIFICATION_FOR_PHARMACEUTICAL = 3; // GIẤY CHỨNG NHẠN ĐỦ ĐIỀU KIỆN KINH DOANH DƯỢC
+const UMC_BUSINESS_DOCUMENT_CERTIFICATE_OF_BUSINESS = 4; // giấy chứng nhận đăng ký doanh nghiệp
 
 
 
@@ -37,16 +37,25 @@ function umcGetListBusinessType(){
     ];
 }
 
-function umcGetListDocumentType($businessType = 1){
+function umcGetListDocumentType(){
     $arr = [
-        UMC_BUSINESS_TYPE_PHARMACY => [
-            UMC_BUSINESS_PHARMACY_DOCUMENT_LICENSE => 'Giấy phép kinh doanh',
-            UMC_BUSINESS_PHARMACY_DOCUMENT_GPP => 'Hồ sơ GPP',
-            UMC_BUSINESS_PHARMACY_DOCUMENT_CERTIFICATE_OF_QUALIFICATION_FOR_PHARMACEUTICAL => 'Giấy chứng nhận đủ điều kiện kinh doanh dược',
-        ]
+        UMC_BUSINESS_DOCUMENT_LICENSE => 'Giấy phép kinh doanh',
+        UMC_BUSINESS_DOCUMENT_GPP => 'Hồ sơ GDP/GPP/GSP',
+        UMC_BUSINESS_DOCUMENT_CERTIFICATE_OF_QUALIFICATION_FOR_PHARMACEUTICAL => 'Giấy chứng nhận đủ điều kiện kinh doanh dược',
     ];
 
-    return $arr[$businessType];
+    return $arr;
+}
+
+function umcGetListDocumentType2(){
+    $arr = [
+        UMC_BUSINESS_DOCUMENT_CERTIFICATE_OF_BUSINESS => 'Giấy chứng nhận đăng ký doanh nghiệp',
+        UMC_BUSINESS_DOCUMENT_CERTIFICATE_OF_QUALIFICATION_FOR_PHARMACEUTICAL => 'Giấy chứng nhận đủ điều kiện kinh doanh dược',
+        UMC_BUSINESS_DOCUMENT_GPP => 'Hồ sơ GDP/GPP/GSP',
+        UMC_BUSINESS_DOCUMENT_LICENSE => 'Giấy phép hoạt động khám, chữa bệnh',
+    ];
+
+    return $arr;
 }
 
 

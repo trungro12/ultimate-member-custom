@@ -23,3 +23,7 @@ define('ULTIMATEMEMBER_CUSTOM__PLUGIN_URL', plugin_dir_url(__FILE__));
 
 require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/core.php');
 add_action('init', array('UltimateMemberCustom', 'init'));
+
+
+register_activation_hook( __FILE__, array( 'UltimateMemberCustom', 'pluginActivation' ) );
+register_deactivation_hook( __FILE__, array( 'UltimateMemberCustom', 'pluginDeactivation' ) );
