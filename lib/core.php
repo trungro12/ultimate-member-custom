@@ -36,16 +36,16 @@ class UltimateMemberCustom
 
     public static function checkUserIsVerifiedBeforeCheckout()
     {
-        add_action('woocommerce_before_cart', 'customer_is_verify_displaying_message');
-        function customer_is_verify_displaying_message()
-        {
-            $userId = get_current_user_id();
-            $isVerify = (int) get_user_meta($userId, 'is_verified', true);
-            if ($isVerify < 1) {
-                $message = __('Tài khoản của bạn chưa được kích hoạt nên không thể mua hàng');
-                wc_add_notice($message, 'error');
-            }
-        }
+        // add_action('woocommerce_before_cart', 'customer_is_verify_displaying_message');
+        // function customer_is_verify_displaying_message()
+        // {
+        //     $userId = get_current_user_id();
+        //     $isVerify = (int) get_user_meta($userId, 'is_verified', true);
+        //     if ($isVerify < 1) {
+        //         $message = __('Tài khoản của bạn chưa được kích hoạt nên không thể mua hàng');
+        //         wc_add_notice($message, 'error');
+        //     }
+        // }
 
 
         add_action('template_redirect', 'customer_is_verify_redirect');
@@ -54,6 +54,8 @@ class UltimateMemberCustom
             $userId = get_current_user_id();
             $isVerify = (int) get_user_meta($userId, 'is_verified', true);
             if (is_checkout() && $isVerify < 1) {
+                $message = __('Tài khoản của bạn chưa được kích hoạt nên không thể mua hàng');
+                wc_add_notice($message, 'error');
                 wp_safe_redirect(esc_url(wc_get_cart_url()));
                 exit;
             }
