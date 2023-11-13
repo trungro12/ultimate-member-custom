@@ -76,7 +76,7 @@ class UltimateMemberCustom_Woo_MyAccount
         $uploadUrl .= "/ultimatemembercustom/$userId/";
 
         if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0644, true);
+            mkdir($uploadDir, 0755, true);
         }
 
         $fileName = self::hashName(basename($fileData['name']));
