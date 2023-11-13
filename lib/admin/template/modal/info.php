@@ -85,7 +85,7 @@ class UltimateMemberCustomAdmin_Modal_Info
     static function __htmlModal($attrs)
     {
         // $attrs = shortcode_atts( ['userid' => ''], $attrs );
-        $userId = 1;
+        $userId = $attrs['userid'];
         $arrBusinessType = umcGetListBusinessType();
         $businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: 1;
         $businessTypeName = $arrBusinessType[$businessType];
