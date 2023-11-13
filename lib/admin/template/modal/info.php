@@ -25,7 +25,7 @@ class UltimateMemberCustomAdmin_Modal_Info
 
                         const modalButton = $('a[data-modal="UM_preview_registration"]');
                         modalButton.click(function() {
-                            const userId = modalButton.data('arg1');
+                            const userId = $(this).data('arg1');
                             if (typeof userId !== 'undefined' && userId !== '') {
 
                                 $('#UM_preview_registration').find('.um-admin-modal-body').empty();
