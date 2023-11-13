@@ -46,7 +46,7 @@ $billing_address_1 = esc_attr(sanitize_text_field(get_user_meta($userId, 'billin
 				<input multiple required type="file" class="woocommerce-Input woocommerce-Input--password input-text" name="document_type_file" id="">
 			<?php else : ?>
 				<?php foreach ($arrFile as $file) : ?>
-					<a style="color:red" target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
+					<a style="color:red" rel='noopener noreferrer nofollow' target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
 				<?php endforeach; ?>
 			<?php endif; ?>
 		</p>

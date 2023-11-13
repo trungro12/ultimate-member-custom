@@ -65,7 +65,7 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULT
 
 				<div class="col-md-4">
 					<label><?php esc_html_e('Ngày cấp', 'woocommerce'); ?></label>
-					<input type="date" class="woocommerce-Input" name="<?php echo $name . 'license_date'; ?>" value="<?php echo $document_type_license_date; ?>">
+					<input type="text" class="woocommerce-Input datepicker" name="<?php echo $name . 'license_date'; ?>" value="<?php echo $document_type_license_date; ?>">
 
 				</div>
 
@@ -90,7 +90,7 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULT
 					<b style="color:red"><?php echo $allowFileTypeMsg; ?></b>
 				<?php else : ?>
 					<?php foreach ($arrFile as $file) : ?>
-						<a style="color:red" target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
+						<a style="color:red" rel='noopener noreferrer nofollow' target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</p>

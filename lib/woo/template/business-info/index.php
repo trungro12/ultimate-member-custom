@@ -49,7 +49,8 @@ if ($businessType === UMC_BUSINESS_TYPE_BEAUTY_SALON) require_once 'CLINIC.php';
 
 ?>
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="<?php echo ULTIMATEMEMBER_CUSTOM__PLUGIN_URL . "lib/assets/js/provinces.js"; ?>"></script>
 <script>
     const adminAjaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
@@ -67,5 +68,10 @@ if ($businessType === UMC_BUSINESS_TYPE_BEAUTY_SALON) require_once 'CLINIC.php';
                 $('#city_code').trigger('change');
             }, 500);
         })
+        $('.datepicker').datepicker({
+            dateFormat: 'dd-mm-yy', //check change
+            changeMonth: true,
+            changeYear: true
+        });
     })(jQuery);
 </script>

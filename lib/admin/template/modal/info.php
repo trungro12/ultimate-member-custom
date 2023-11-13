@@ -22,44 +22,68 @@ class UltimateMemberCustomAdmin_Modal_Info
             <script>
                 (function($) {
                     $(function() {
+
                         const modalButton = $('a[data-modal="UM_preview_registration"]');
                         modalButton.click(function() {
                             const userId = modalButton.data('arg1');
                             if (typeof userId !== 'undefined' && userId !== '') {
-                                setTimeout(() => {
-                                    $('#UM_preview_registration .um-admin-infobox .um-row:visible').ready(function() {
-                                        $.ajax({
-                                            type: "post",
-                                            url: '<?php echo esc_url(admin_url('admin-ajax.php')); ?>',
-                                            data: {
-                                                action: "umc_modal_info_admin", //Tên action
-                                                userId: userId,
-                                            },
-                                            beforeSend: function() {
-                                                $('#UM_preview_registration .um-admin-infobox').append('<p style="font-weight:bold;color:red" id="loading">Đang tải thông tin doanh nghiệp...</p>');
-                                            },
-                                            success: function(response) {
-                                                // console.log(response);
-                                                const modalAppend = $('#UM_preview_registration .um-admin-infobox');
-                                                modalAppend.find('#loading').remove();
-                                                modalAppend.append(response);
-                                                // if (response.success) {
-                                                //     const modalAppend = $('#UM_preview_registration .um-admin-infobox');
-                                                //     modalAppend.append(atob(response.data.html));
-                                                // } else {
-                                                //     alert('Đã có lỗi xảy ra');
-                                                // }
-                                            },
-                                            error: function(jqXHR, textStatus, errorThrown) {
-                                                console.log('The following error occured: ' + textStatus, errorThrown);
-                                            }
-                                        })
+
+                                $('#UM_preview_registration').find('.um-admin-modal-body').empty();
+
+                                waitForElementToExist('#UM_preview_registration .um-admin-infobox .um-row').then(e => {
+                                    $('#UM_preview_registration .um-admin-infobox').append('<p style="font-weight:bold;color:red" id="loading">Đang tải thông tin doanh nghiệp...</p>');
+                                    $.ajax({
+                                        type: "post",
+                                        url: '<?php echo esc_url(admin_url('admin-ajax.php')); ?>',
+                                        data: {
+                                            action: "umc_modal_info_admin", //Tên action
+                                            userId: userId,
+                                        },
+                                        beforeSend: function() {
+                                            // $('#UM_preview_registration .um-admin-infobox').append('<p style="font-weight:bold;color:red" id="loading">Đang tải thông tin doanh nghiệp...</p>');
+                                        },
+                                        success: function(response) {
+                                            // console.log(response);
+                                            const modalAppend = $('#UM_preview_registration .um-admin-infobox');
+                                            modalAppend.find('#loading').remove();
+                                            modalAppend.append(response);
+                                            // if (response.success) {
+                                            //     const modalAppend = $('#UM_preview_registration .um-admin-infobox');
+                                            //     modalAppend.append(atob(response.data.html));
+                                            // } else {
+                                            //     alert('Đã có lỗi xảy ra');
+                                            // }
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            console.log('The following error occured: ' + textStatus, errorThrown);
+                                        }
                                     });
-                                }, 500);
+                                });
+
                             }
                         });
                     });
                 })(jQuery);
+
+                function waitForElementToExist(selector) {
+                    return new Promise(resolve => {
+                        if (document.querySelector(selector)) {
+                            return resolve(document.querySelector(selector));
+                        }
+
+                        const observer = new MutationObserver(() => {
+                            if (document.querySelector(selector)) {
+                                resolve(document.querySelector(selector));
+                                observer.disconnect();
+                            }
+                        });
+
+                        observer.observe(document.body, {
+                            subtree: true,
+                            childList: true,
+                        });
+                    });
+                }
             </script>
         <?php
         });
@@ -125,12 +149,19 @@ class UltimateMemberCustomAdmin_Modal_Info
                     $license_date = $license_date ? date('d-m-Y', $license_date) : '';
                     $license_city_code = (int) esc_attr(sanitize_text_field(get_user_meta($userId, $name . 'license_city_code', true)));
                     $city = UltimateMemberCustom::getCity($license_city_code);
+
+                    $document_type_license_file = esc_attr(sanitize_text_field(get_user_meta($userId, $name . 'license_file', true)));
                     ?>
                     <p><b style="font-weight: bold;color: red;font-size: 15px;"><?php echo $documentTypeName; ?></b></p>
                     <p><label><?php esc_html_e('Số giấy phép: ') ?></label><span><?php echo $license_number; ?></span></p>
                     <p><label><?php esc_html_e('Ngày cấp: ') ?></label><span><?php echo $license_date; ?></span></p>
                     <p><label><?php esc_html_e('Nơi cấp: ') ?></label><span><?php echo $city->full_name; ?></span></p>
-
+                    <?php if (!empty($arrFile = json_decode(base64_decode($document_type_license_file)))) : ?>
+                        <p><label><?php esc_html_e('File Upload: ') ?></label><span><?php echo count($arrFile); ?> file</span></p>
+                        <?php foreach ($arrFile as $file) : ?>
+                            <a style="color:red" rel='noopener noreferrer nofollow' target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 <?php endforeach; ?>
 
             <?php
