@@ -68,14 +68,14 @@ class UltimateMemberCustom
 
         function __showUserUploadFileField($user)
         {
-            $title = 'File Upload khi đăng ký (từ plugin Ultimate Member), hỗ trợ các file có đuôi ' . '<b style="color:red">' . implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE) . '</b>';
+            $title = 'File Upload, hỗ trợ các file có đuôi ' . '<b style="color:red">' . implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE) . '</b>';
 ?>
             <h3><?php _e($title); ?></h3>
             <?php
             $userId = $user->ID;
             $uploads = wp_upload_dir();
-            $baseDir = str_replace("\\", "/", $uploads['basedir'] . "/ultimatemember/$userId");
-            $baseUrl = str_replace("\\", "/", $uploads['baseurl'] . "/ultimatemember/$userId");
+            $baseDir = str_replace("\\", "/", $uploads['basedir'] . "/ultimatemembercustom/$userId");
+            $baseUrl = str_replace("\\", "/", $uploads['baseurl'] . "/ultimatemembercustom/$userId");
 
             $files = glob($baseDir . "/*");
             wp_enqueue_script('jquery');
