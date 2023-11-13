@@ -113,10 +113,13 @@ class UltimateMemberCustomAdmin_Modal_Info
         $arrBusinessType = umcGetListBusinessType();
         $businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: 1;
         $businessTypeName = $arrBusinessType[$businessType];
+        $isVerified = (int) sanitize_text_field(get_user_meta($userId, 'is_verified', true)) ?: 0;
+        $isVerified = $isVerified ? '<b style="color:green">✅Đã xác minh</b>' : '<b style="color:red">Chưa xác minh</b>';
         ?>
         <div class="um-row _um_row_last " style="margin: 0 0 30px 0;">
             <p><b style="font-weight: bold;color: red;font-size: 15px;">Thông tin doanh nghiệp</b></p>
             <p><label><?php esc_html_e('Bạn là: '); ?></label><span><?php echo $businessTypeName; ?></span></p>
+            <p><label><?php esc_html_e('Tình trạng xác minh: '); ?></label><span><?php echo $isVerified; ?></span></p>
             <?php
             if (in_array($businessType, umcGetListBusinessTypeId1())) {
                 // template 1
