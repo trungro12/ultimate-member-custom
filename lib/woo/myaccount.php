@@ -25,10 +25,14 @@ class UltimateMemberCustom_Woo_MyAccount
         //     return $vars;
         // });
 
-        add_filter('woocommerce_account_menu_items', function ($items) {
-            $items['business-info'] = __('Thông tin doanh nghiệp', 'woocommerce');
-            return $items;
-        });
+        $userId = get_current_user_id();
+        $businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: 1;
+        if ($businessType !== UMC_BUSINESS_TYPE_PATIENT) {
+            add_filter('woocommerce_account_menu_items', function ($items) {
+                $items['business-info'] = __('Thông tin doanh nghiệp', 'woocommerce');
+                return $items;
+            });
+        }
 
 
         add_action('woocommerce_account_business-info_endpoint', function () {
