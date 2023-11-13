@@ -39,12 +39,14 @@ $billing_address_1 = esc_attr(sanitize_text_field(get_user_meta($userId, 'billin
 		</p>
 
 		<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-			<!-- <input type="file" class="woocommerce-Input woocommerce-Input--password input-text" name="document_type_file" id=""> -->
-			<?php if (empty($document_type_file)) : ?>
+			<?php
+			$arrFile = json_decode(base64_decode($document_type_file), true);
+			?>
+			<?php if (empty($document_type_file) || empty($arrFile)) : ?>
 				<input multiple required type="file" class="woocommerce-Input woocommerce-Input--password input-text" name="document_type_file" id="">
 			<?php else : ?>
-				<?php foreach (unserialize($document_type_file) as $file) : ?>
-					<a style="color:red" href="<?php echo $file; ?>"><?php echo basename($file); ?></a>
+				<?php foreach ($arrFile as $file) : ?>
+					<a style="color:red" target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
 				<?php endforeach; ?>
 			<?php endif; ?>
 		</p>

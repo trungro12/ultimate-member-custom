@@ -21,6 +21,8 @@ $billing_address_1 = esc_attr(sanitize_text_field(get_user_meta($userId, 'billin
 
 $business_image = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_image', true)));
 
+$allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE);
+
 ?>
 
 <form action="" method="post" enctype="multipart/form-data">
@@ -45,7 +47,7 @@ $business_image = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_
 		$name = 'document_type_' . $id . "__";
 		$document_type_license_number = esc_attr(sanitize_text_field(get_user_meta($userId, $name . 'license_number', true)));
 		$document_type_license_date = (int) esc_attr(sanitize_text_field(get_user_meta($userId, $name . 'license_date', true)));
-		$document_type_license_date = $document_type_license_date ? date("Y/m/d", $document_type_license_date) : '';
+		$document_type_license_date = $document_type_license_date ? date("d-m-Y", $document_type_license_date) : '';
 
 		$document_type_license_city_code = esc_attr(sanitize_text_field(get_user_meta($userId, $name . 'license_city_code', true)));
 
@@ -55,27 +57,40 @@ $business_image = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_
 		<fieldset>
 			<legend><?php esc_html_e($documentTypeName, 'woocommerce'); ?></legend>
 			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-				<label><?php esc_html_e('Số giấy phép', 'woocommerce'); ?></label>
-				<input type="text" class="woocommerce-Input" name="<?php echo $name . 'license_number'; ?>" value="<?php echo $document_type_license_number; ?>">
+			<div class="row">
+				<div class="col-md-4">
+					<label><?php esc_html_e('Số giấy phép', 'woocommerce'); ?></label>
+					<input type="text" class="woocommerce-Input" name="<?php echo $name . 'license_number'; ?>" value="<?php echo $document_type_license_number; ?>">
+				</div>
 
-				<label><?php esc_html_e('Ngày cấp', 'woocommerce'); ?></label>
-				<input type="date" class="woocommerce-Input" name="<?php echo $name . 'license_date'; ?>" value="<?php echo $document_type_license_date; ?>">
+				<div class="col-md-4">
+					<label><?php esc_html_e('Ngày cấp', 'woocommerce'); ?></label>
+					<input type="date" class="woocommerce-Input" name="<?php echo $name . 'license_date'; ?>" value="<?php echo $document_type_license_date; ?>">
 
-				<label><?php esc_html_e('Nơi cấp', 'woocommerce'); ?></label>
-				<select name="<?php echo $name . 'license_city_code'; ?>">
-					<option value="">Chọn Tỉnh/Thành Phố</option>
-					<?php foreach ($arrCity as $city) : ?>
-						<option <?php echo $document_type_license_city_code == $city->code ? 'selected' : ''; ?> value="<?php echo $city->code; ?>"><?php echo $city->full_name; ?></option>
-					<?php endforeach; ?>
-				</select>
+				</div>
+
+				<div class="col-md-4">
+					<label><?php esc_html_e('Nơi cấp', 'woocommerce'); ?></label>
+					<select name="<?php echo $name . 'license_city_code'; ?>">
+						<option value="">Chọn Tỉnh/Thành Phố</option>
+						<?php foreach ($arrCity as $city) : ?>
+							<option <?php echo $document_type_license_city_code == $city->code ? 'selected' : ''; ?> value="<?php echo $city->code; ?>"><?php echo $city->full_name; ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+			</div>
 
 			</p>
 			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-				<?php if (empty($document_type_license_file)) : ?>
-					<input multiple required type="file" class="woocommerce-Input" name="<?php echo $name . 'license_file'; ?>" id="">
+				<?php
+				$arrFile = json_decode(base64_decode($document_type_license_file), true);
+				?>
+				<?php if (empty($document_type_license_file) || empty($arrFile)) : ?>
+					<input multiple type="file" class="woocommerce-Input" name="<?php echo $name . 'license_file[]'; ?>" id=""><br>
+					<b style="color:red"><?php echo $allowFileTypeMsg; ?></b>
 				<?php else : ?>
-					<?php foreach (unserialize($document_type_license_file) as $file) : ?>
-						<a style="color:red" href="<?php echo $file; ?>"><?php echo basename($file); ?></a>
+					<?php foreach ($arrFile as $file) : ?>
+						<a style="color:red" target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</p>
@@ -86,17 +101,17 @@ $business_image = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_
 
 
 	<fieldset>
-			<legend><?php esc_html_e('Hình ảnh nhà thuốc', 'woocommerce'); ?></legend>
-			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-				<?php if (empty($business_image)) : ?>
-					<input multiple required type="file" class="woocommerce-Input" name="business_image" id="">
-				<?php else : ?>
-					<?php foreach (unserialize($business_image) as $file) : ?>
-						<a style="color:red" href="<?php echo $file; ?>"><?php echo basename($file); ?></a>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</p>
-		</fieldset>
+		<legend><?php esc_html_e('Hình ảnh nhà thuốc', 'woocommerce'); ?></legend>
+		<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+			<?php if (empty($business_image)) : ?>
+				<input multiple type="file" class="woocommerce-Input" name="business_image[]" id="">
+			<?php else : ?>
+				<?php foreach (unserialize($business_image) as $file) : ?>
+					<a style="color:red" href="<?php echo $file; ?>"><?php echo basename($file); ?></a>
+				<?php endforeach; ?>
+			<?php endif; ?>
+		</p>
+	</fieldset>
 
 
 

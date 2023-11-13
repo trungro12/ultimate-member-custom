@@ -36,14 +36,36 @@ class UltimateMemberCustom_Woo_MyAccount
         });
     }
 
-    static function uploadFile($fileData){
+    static function uploadFile($fileData)
+    {
 
-        return self::__uploadFile($fileData);
+        $arrFileName = [];
+        // format file data 
+        if (is_array($fileData['name'])) {
+            foreach ($fileData['name'] as $key => $value) {
+                $data = [
+                    'name' => $fileData['name'][$key],
+                    'tmp_name' => $fileData['tmp_name'][$key],
+                ];
+                $fileName = self::__uploadFile($data);
+                if ($fileName) $arrFileName[] = $fileName;
+            }
+            return $arrFileName;
+        }
+
+        $fileName = self::__uploadFile($fileData);
+
+        return $fileName ? [$fileName] : [];
     }
 
 
     static function __uploadFile($fileData)
     {
+
+        // check file 
+        $fileExt = end(explode(".", $fileData['name']));
+        if (!in_array($fileExt, ULTIMATEMEMBER_CUSTOM__FILETYPE)) return null;
+
         $uploads = wp_upload_dir();
         $uploadDir = $uploads['basedir'];
         $uploadUrl = $uploads['baseurl'];
@@ -64,7 +86,7 @@ class UltimateMemberCustom_Woo_MyAccount
         if (@move_uploaded_file($fileData['tmp_name'], $uploadFile)) {
             return $fileUrl;
         } else {
-            return null;
+            return '';
         }
     }
 

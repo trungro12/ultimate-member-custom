@@ -58,4 +58,6 @@ function umcGetListDocumentType2(){
     return $arr;
 }
 
-
+function umcGetListBusinessTypeId1(){
+    return [UMC_BUSINESS_TYPE_PHARMACY, UMC_BUSINESS_TYPE_DRUGSTORE, UMC_BUSINESS_TYPE_PHARMA_COMPANY];
+}

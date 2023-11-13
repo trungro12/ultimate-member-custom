@@ -17,14 +17,18 @@ if (!empty($_POST['action']) && !empty($_POST['_wpnonce']) && wp_verify_nonce($_
         $value = sanitize_text_field($value);
 
         if (strpos($key, "_file") !== false) {
-            if (!is_array($_FILES[$key])) $_FILES[$key] = [$_FILES[$key]];
-            $arrFileName = [];
-            foreach ($_FILES[$key] as $fileData) {
-                $fileName = UltimateMemberCustom_Woo_MyAccount::uploadFile($fileData);
-                if ($fileName) $arrFileName[] = $fileName;
-            }
+            $arrFileName = UltimateMemberCustom_Woo_MyAccount::uploadFile($_FILES[$key]);
+
             if (!empty($arrFileName))
-                update_user_meta($userId, $key, serialize($arrFileName));
+                update_user_meta($userId, $key, base64_encode(json_encode($arrFileName)));
+            continue;
+        }
+
+        if (strpos($key, "_date") !== false) {
+            $date = strtotime($value);
+
+            if (!empty($date))
+                update_user_meta($userId, $key, $date);
             continue;
         }
 

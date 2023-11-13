@@ -28,6 +28,10 @@ class UltimateMemberCustom
         self::showUserUploadFileField();
         self::showUserVerifyField();
         UltimateMemberCustom_Coupons::init_admin();
+
+        // init modal info user 
+        require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/admin/template/modal/info.php');
+        UltimateMemberCustomAdmin_Modal_Info::init();
     }
 
     public static function checkUserIsVerifiedBeforeCheckout()
@@ -321,6 +325,14 @@ class UltimateMemberCustom
         }
     }
 
+    static function getCity($code){
+        global $wpdb;
+        $table = 'provinces';
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE code='$code';");
+        $results = $wpdb->get_row( $query );
+        return $results;
+    }
+
     static function getCityList(){
         global $wpdb;
         $table = 'provinces';
@@ -336,12 +348,27 @@ class UltimateMemberCustom
         $results = $wpdb->get_results( $query );
         return $results;
     }
+    static function getDistrict($code){
+        global $wpdb;
+        $table = 'districts';
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE code=%s;", $code );
+        $results = $wpdb->get_row( $query );
+        return $results;
+    }
 
     static function getWardList($districtId){
         global $wpdb;
         $table = 'wards';
         $query = $wpdb->prepare("SELECT * FROM $table WHERE district_code=%s;", $districtId );
         $results = $wpdb->get_results( $query );
+        return $results;
+    }
+
+    static function getWard($code){
+        global $wpdb;
+        $table = 'wards';
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE code=%s;", $code );
+        $results = $wpdb->get_row( $query );
         return $results;
     }
     
