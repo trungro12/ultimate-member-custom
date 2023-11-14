@@ -7,6 +7,17 @@ class UltimateMemberCustom_Woo_MyAccount
     public static function init()
     {
         self::addBusinessInfo();
+        self::redirectRegisterPage();
+    }
+
+    static function redirectRegisterPage()
+    {
+        add_action('woocommerce_before_customer_login_form', function () {
+            if ($_GET['action'] === 'register' && !is_user_logged_in()) {
+                wp_safe_redirect(home_url('/register'));
+                exit;
+            }
+        });
     }
 
     public static function addBusinessInfo()
@@ -49,7 +60,7 @@ class UltimateMemberCustom_Woo_MyAccount
             foreach ($fileData['name'] as $key => $value) {
                 $name = $fileData['name'][$key];
                 $tmpName = $fileData['tmp_name'][$key];
-                
+
                 $data = [
                     'name' => $name,
                     'tmp_name' => $tmpName,
@@ -70,7 +81,7 @@ class UltimateMemberCustom_Woo_MyAccount
     static function __uploadFile($fileData)
     {
         if (empty($fileData['name']) || empty($fileData['tmp_name'])) return null;
-        
+
         $arrFileAllow = array_merge(ULTIMATEMEMBER_CUSTOM__FILETYPE, ULTIMATEMEMBER_CUSTOM__FILETYPE_IMAGE);
         // check file 
         $fileExt = strtolower(end(explode(".", $fileData['name'])));
