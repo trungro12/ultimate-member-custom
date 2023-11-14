@@ -8,7 +8,45 @@ class UltimateMemberCustom_Woo_MyAccount
     {
         self::addBusinessInfo();
         self::addBankInfo();
+        self::addInvoiceExportInfo();
         self::redirectRegisterPage();
+        self::initAJax();
+    }
+
+    static function initAJax()
+    {
+        add_action('wp_ajax_umc_modal_save_invoice_export_info', 'umc_modal_save_invoice_export_info_ajax');
+        add_action('wp_ajax_nopriv_umc_modal_save_invoice_export_info', 'umc_modal_save_invoice_export_info_ajax');
+        function umc_modal_save_invoice_export_info_ajax()
+        {
+            $userId = get_current_user_id();
+
+            if (empty($userId)) {
+                wp_send_json_error();
+                exit;
+            }
+
+            $arrInvoiceExportInfo = sanitize_text_field(get_user_meta($userId, 'invoice_export_info', true));
+            $arrInvoiceExportInfo = $arrInvoiceExportInfo ? json_decode($arrInvoiceExportInfo, true) : [];
+
+            $id = (!empty($_POST['id'])) ? sanitize_text_field($_POST['id']) : md5(time());
+            $isDelete = (!empty($_POST['actionName']) && $_POST['actionName'] === 'delete') ? 1 : 0;
+            if ($isDelete) {
+                unset($arrInvoiceExportInfo[$id]);
+            } else {
+                $name = sanitize_text_field($_POST['name']);
+                $tax_code = sanitize_text_field($_POST['tax_code']);
+                $address = sanitize_text_field($_POST['address']);
+                $arrInvoiceExportInfo[$id] = [
+                    'name' => $name,
+                    'tax_code' => $tax_code,
+                    'address' => $address,
+                ];
+            }
+            update_user_meta($userId, 'invoice_export_info', json_encode($arrInvoiceExportInfo));
+            wp_send_json_success();
+            die();
+        }
     }
 
     static function redirectRegisterPage()
@@ -70,6 +108,27 @@ class UltimateMemberCustom_Woo_MyAccount
 
         add_action('woocommerce_account_bank-info_endpoint', function () {
             require_once ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/template/bank-info/index.php';
+        });
+    }
+
+    public static function addInvoiceExportInfo()
+    {
+        add_action('init', function () {
+            add_rewrite_endpoint('invoice-export-info', EP_ROOT | EP_PAGES);
+        });
+
+        add_filter('woocommerce_get_query_vars', function ($vars) {
+            $vars['invoice-export-info'] = 'invoice-export-info';
+            return $vars;
+        });
+
+        add_filter('woocommerce_account_menu_items', function ($items) {
+            $items['invoice-export-info'] = __('Thông tin xuất hoá đơn', 'woocommerce');
+            return $items;
+        });
+
+        add_action('woocommerce_account_invoice-export-info_endpoint', function () {
+            require_once ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/template/invoice-export-info/index.php';
         });
     }
 

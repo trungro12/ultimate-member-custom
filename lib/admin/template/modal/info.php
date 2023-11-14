@@ -265,6 +265,21 @@ class UltimateMemberCustomAdmin_Modal_Info
                 });
             })(jQuery);
         </script>
+
+        <!-- thông tin ngân hàng  -->
+        <div class="um-row _um_row_last " style="margin: 0 0 30px 0;">
+            <p><b style="font-weight: bold;color: red;font-size: 15px;">Thông tin ngân hàng</b></p>
+            <?php
+            $bank_account_holder_name = esc_attr(sanitize_text_field(get_user_meta($userId, 'bank_account_holder_name', true)));
+            $bank_account_number = esc_attr(sanitize_text_field(get_user_meta($userId, 'bank_account_number', true)));
+            $bank_code = esc_attr(sanitize_text_field(get_user_meta($userId, 'bank_code', true)));
+            $bank = UltimateMemberCustom::getBank($bank_code);
+            ?>
+            <p><label><?php esc_html_e('Chủ tài khoản: ') ?></label><span><?php echo $bank_account_holder_name; ?></span></p>
+            <p><label><?php esc_html_e('Số tài khoản: ') ?></label><span><?php echo $bank_account_number; ?></span></p>
+            <p><label><?php esc_html_e('Ngân hàng: ') ?></label><span><?php echo $bank->code ? esc_html ($bank->name . " [$bank->short_name] - $bank->code") : ''; ?></span></p>
+
+        </div>
 <?php
     }
 }

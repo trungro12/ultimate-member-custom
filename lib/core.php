@@ -194,8 +194,17 @@ class UltimateMemberCustom
     {
         global $wpdb;
         $table = 'banks';
-        $query = $wpdb->prepare("SELECT * FROM $table");
+        $query = $wpdb->prepare("SELECT * FROM $table;");
         $results = $wpdb->get_results($query);
+        return $results;
+    }
+
+    static function getBank($code)
+    {
+        global $wpdb;
+        $table = 'banks';
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE code='$code';");
+        $results = $wpdb->get_row($query);
         return $results;
     }
 

@@ -47,7 +47,7 @@ if (!empty($_POST['action']) && !empty($_POST['_wpnonce']) && wp_verify_nonce($_
             <input type="text" required class="woocommerce-Input" name="bank_account_holder_name" placeholder="NGUYEN VAN A" value="<?php echo $bank_account_holder_name; ?>">
 
             <label for="bank_account_holder_name">Số tài khoản <span class="required">*</span></label>
-            <input type="text" required="woocommerce-Input" name="bank_account_number" placeholder="123456789" value="<?php echo $bank_account_number; ?>">
+            <input type="text" required class="woocommerce-Input" name="bank_account_number" placeholder="123456789" value="<?php echo $bank_account_number; ?>">
 
             <label for="bank_account_holder_name">Chọn ngân hàng <span class="required">*</span></label>
             <input type="text" required value="<?php echo $bank_code; ?>" class="woocommerce-Input" name="bank_code" list="banks">

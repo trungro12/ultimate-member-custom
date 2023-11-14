@@ -231,7 +231,7 @@ class UltimateMemberCustom_Admin_Users
         add_action('manage_users_extra_tablenav', 'render_custom_filter_options');
         function render_custom_filter_options()
         {
-            $isVerified = sanitize_text_field($_GET['is_verified']);
+            $isVerified = sanitize_text_field(empty($_GET['is_verified']) ? '' : $_GET['is_verified']);
         ?>
 
             <form action="" method="get">
