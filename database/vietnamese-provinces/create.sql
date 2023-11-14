@@ -1,4 +1,14 @@
 
+-- CREATE banks TABLE
+CREATE TABLE banks (
+	id int NOT NULL,
+	name varchar(255) NOT NULL,
+	code varchar(255) NOT NULL,
+	short_name varchar(255) NOT NULL,
+	swift_code varchar(255) NULL,
+	CONSTRAINT banks_pkey PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 -- CREATE provinces TABLE
 CREATE TABLE provinces (
 	code varchar(20) NOT NULL,

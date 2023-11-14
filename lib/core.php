@@ -5,11 +5,7 @@ class UltimateMemberCustom
     {
         require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/define.php');
 
-
-
         self::provinceAjaxInit();
-
-
 
         // register page
         require_once(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/register.php');
@@ -82,34 +78,35 @@ class UltimateMemberCustom
         // }
         // $sql = $wp_filesystem->get_contents( $sqlFile );
         $sql = file_get_contents($sqlFile);
-        $data = [];
         if ($isDrop) {
             global $wpdb;
             if (!empty($sql)) {
                 foreach (explode(";", $sql) as $q) {
                     $q = trim($q);
                     if (empty($q)) continue;
-                    $data[] = $wpdb->query($q . ";");
+                    $wpdb->query($q . ";");
                 }
             }
-            return $data;
+            return;
         }
         // $rowsAffected = $wpdb->query( $sql );
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        return dbDelta($sql);
+        dbDelta($sql);
     }
 
     static function migrateDB()
     {
         $sqlFile = (ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/database/vietnamese-provinces/drop.sql');
-        $result[] = self::runSQL($sqlFile, true);
+        self::runSQL($sqlFile);
 
         // insert database 
         $sqlFile = (ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/database/vietnamese-provinces/create.sql');
-        $result[] = self::runSQL($sqlFile);
+        self::runSQL($sqlFile);
 
         $sqlFile = (ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/database/vietnamese-provinces/insert.sql');
-        $result[] = self::runSQL($sqlFile);
+        self::runSQL($sqlFile);
+
+        self::migrateBank();
     }
 
 
@@ -140,51 +137,98 @@ class UltimateMemberCustom
         }
     }
 
-    static function getCity($code){
+    static function getCity($code)
+    {
         global $wpdb;
         $table = 'provinces';
         $query = $wpdb->prepare("SELECT * FROM $table WHERE code='$code';");
-        $results = $wpdb->get_row( $query );
+        $results = $wpdb->get_row($query);
         return $results;
     }
 
-    static function getCityList(){
+    static function getCityList()
+    {
         global $wpdb;
         $table = 'provinces';
         $query = $wpdb->prepare("SELECT * FROM $table;");
-        $results = $wpdb->get_results( $query );
+        $results = $wpdb->get_results($query);
         return $results;
     }
 
-    static function getDistrictList($cityId){
+    static function getDistrictList($cityId)
+    {
         global $wpdb;
         $table = 'districts';
-        $query = $wpdb->prepare("SELECT * FROM $table WHERE province_code=%s;", $cityId );
-        $results = $wpdb->get_results( $query );
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE province_code=%s;", $cityId);
+        $results = $wpdb->get_results($query);
         return $results;
     }
-    static function getDistrict($code){
+    static function getDistrict($code)
+    {
         global $wpdb;
         $table = 'districts';
-        $query = $wpdb->prepare("SELECT * FROM $table WHERE code=%s;", $code );
-        $results = $wpdb->get_row( $query );
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE code=%s;", $code);
+        $results = $wpdb->get_row($query);
         return $results;
     }
 
-    static function getWardList($districtId){
+    static function getWardList($districtId)
+    {
         global $wpdb;
         $table = 'wards';
-        $query = $wpdb->prepare("SELECT * FROM $table WHERE district_code=%s;", $districtId );
-        $results = $wpdb->get_results( $query );
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE district_code=%s;", $districtId);
+        $results = $wpdb->get_results($query);
         return $results;
     }
 
-    static function getWard($code){
+    static function getWard($code)
+    {
         global $wpdb;
         $table = 'wards';
-        $query = $wpdb->prepare("SELECT * FROM $table WHERE code=%s;", $code );
-        $results = $wpdb->get_row( $query );
+        $query = $wpdb->prepare("SELECT * FROM $table WHERE code=%s;", $code);
+        $results = $wpdb->get_row($query);
         return $results;
     }
-    
+
+    static function getBankList()
+    {
+        global $wpdb;
+        $table = 'banks';
+        $query = $wpdb->prepare("SELECT * FROM $table");
+        $results = $wpdb->get_results($query);
+        return $results;
+    }
+
+
+    static function migrateBank()
+    {
+        $jsonBank = json_decode(self::getUrl('https://api.vietqr.io/v2/banks'), true);
+        if (!empty($jsonBank['data'])) {
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            foreach ($jsonBank['data'] as $bank) {
+                $id = sanitize_text_field($bank['id']);
+                $name = sanitize_text_field($bank['name']);
+                $code = sanitize_text_field($bank['code']);
+                $short_name = sanitize_text_field($bank['short_name']);
+                $swift_code = sanitize_text_field($bank['swift_code']);
+                $sql = "INSERT INTO banks(id,name,code,short_name,swift_code) VALUES ($id,'$name','$code','$short_name','$swift_code');";
+                dbDelta($sql);
+            }
+        }
+    }
+
+
+
+
+
+
+    static function getUrl($url)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $contents = curl_exec($ch);
+        curl_close($ch);
+        return $contents;
+    }
 }

@@ -7,13 +7,14 @@ class UltimateMemberCustom_Woo_MyAccount
     public static function init()
     {
         self::addBusinessInfo();
+        self::addBankInfo();
         self::redirectRegisterPage();
     }
 
     static function redirectRegisterPage()
     {
         add_action('woocommerce_before_customer_login_form', function () {
-            if ($_GET['action'] === 'register' && !is_user_logged_in()) {
+            if (!empty($_GET['action']) && $_GET['action'] === 'register' && !is_user_logged_in()) {
                 wp_safe_redirect(home_url('/register'));
                 exit;
             }
@@ -48,6 +49,27 @@ class UltimateMemberCustom_Woo_MyAccount
 
         add_action('woocommerce_account_business-info_endpoint', function () {
             require_once ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/template/business-info/index.php';
+        });
+    }
+
+    public static function addBankInfo()
+    {
+        add_action('init', function () {
+            add_rewrite_endpoint('bank-info', EP_ROOT | EP_PAGES);
+        });
+
+        add_filter('woocommerce_get_query_vars', function ($vars) {
+            $vars['bank-info'] = 'bank-info';
+            return $vars;
+        });
+
+        add_filter('woocommerce_account_menu_items', function ($items) {
+            $items['bank-info'] = __('Tài khoản ngân hàng', 'woocommerce');
+            return $items;
+        });
+
+        add_action('woocommerce_account_bank-info_endpoint', function () {
+            require_once ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/lib/woo/template/bank-info/index.php';
         });
     }
 

@@ -90,6 +90,9 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULT
 					<b style="color:red"><?php echo $allowFileTypeMsg; ?></b>
 				<?php else : ?>
 					<?php foreach ($arrFile as $file) : ?>
+						<?php
+						$file = esc_url($file);
+						?>
 						<a style="color:red" rel='noopener noreferrer nofollow' target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
 					<?php endforeach; ?>
 				<?php endif; ?>
@@ -134,7 +137,7 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULT
 			<select required name="city_code" id="city_code">
 				<option value="">Chọn Tỉnh/Thành Phố</option>
 				<?php foreach ($arrCity as $city) : ?>
-					<option <?php echo $city_code === $city->code ? 'selected' : ''; ?> value="<?php echo $city->code; ?>"><?php echo $city->full_name; ?></option>
+					<option <?php echo $city_code === $city->code ? 'selected' : ''; ?> value="<?php echo esc_attr($city->code); ?>"><?php echo esc_html($city->full_name); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
