@@ -21,7 +21,7 @@ class UltimateMemberCustom_Register
             </div>
             <div class="um-field-area">
                 <?php foreach ($arrBusinessType as $id => $name) : ?>
-                    <label class="um-field-radio  um-field-half "><input checked type="radio" name="business_type" value="<?php echo $id; ?>"><span class="um-field-radio-state"><i class="um-icon-android-radio-button-off"></i></span><span class="um-field-radio-option"><?php echo $name; ?></span></label>
+                    <label class="um-field-radio  um-field-half "><input <?php echo $id == 1 ? 'checked' : '' ?> type="radio" name="business_type" value="<?php echo $id; ?>"><span class="um-field-radio-state"><i class="um-icon-android-radio-button-<?php echo $id == 1 ? 'on' : 'off' ?>"></i></span><span class="um-field-radio-option"><?php echo $name; ?></span></label>
                 <?php endforeach; ?>
 
             </div>
