@@ -101,6 +101,27 @@ class UltimateMemberCustomAdmin_Modal_Info
             echo $html;
             die();
         }
+
+
+        add_action('wp_ajax_umc_modal_info_admin_to_verified', 'umc_modal_info_admin_to_verified_ajax');
+        add_action('wp_ajax_nopriv_umc_modal_info_admin_to_verified', 'umc_modal_info_admin_to_verified_ajax');
+        function umc_modal_info_admin_to_verified_ajax()
+        {
+            $arrData = [
+                "error" => -1 // permission
+            ];
+            $userId = (isset($_POST['userId'])) ? esc_attr($_POST['userId']) : '';
+            if (current_user_can('administrator')) {
+                update_user_meta($userId, 'is_verified', 1);
+                $arrData = [
+                    "data" => "",
+                    "error" => 0
+                ];
+            }
+
+            wp_send_json_success($arrData);
+            die();
+        }
     }
 
 
@@ -114,12 +135,12 @@ class UltimateMemberCustomAdmin_Modal_Info
         $businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: 1;
         $businessTypeName = $arrBusinessType[$businessType];
         $isVerified = (int) sanitize_text_field(get_user_meta($userId, 'is_verified', true)) ?: 0;
-        $isVerified = $isVerified ? '<b style="color:green">✅Đã xác minh</b>' : '<b style="color:red">Chưa xác minh</b>';
+        $isVerified = $isVerified ? '<b style="color:green">✅Đã xác minh</b>' : '<b style="color:red">Chưa xác minh <button style="cursor: pointer; border: 1px; background: #ddd; border-radius: 4px;" id="toVerified" data-id="' . $userId . '">Chuyển sang trạng thái ✅Đã xác minh</button></b>';
         ?>
         <div class="um-row _um_row_last " style="margin: 0 0 30px 0;">
             <p><b style="font-weight: bold;color: red;font-size: 15px;">Thông tin doanh nghiệp</b></p>
             <p><label><?php esc_html_e('Bạn là: '); ?></label><span><?php echo $businessTypeName; ?></span></p>
-            <p><label><?php esc_html_e('Tình trạng xác minh: '); ?></label><span><?php echo $isVerified; ?></span></p>
+            <p><label><?php esc_html_e('Tình trạng xác minh: '); ?></label><span id="verifiedText"><?php echo $isVerified; ?></span></p>
             <?php
             if (in_array($businessType, umcGetListBusinessTypeId1())) {
                 // template 1
@@ -203,6 +224,47 @@ class UltimateMemberCustomAdmin_Modal_Info
             <p><label><?php esc_html_e('Số nhà - tên đường: ') ?></label><span><?php echo $billing_address_1; ?></span></p>
 
         </div>
+
+
+        <script>
+            (function($) {
+                // chuyển sang trạng thái đã xác minh
+                const toVerified = $('#toVerified');
+                toVerified.click(function() {
+                    const userId = parseInt($(this).data('id'));
+                    if (!userId || isNaN(userId)) return;
+                    let check = confirm("Bạn có chắc muốn thực hiện?");
+                    if (!check) return;
+
+                    $.ajax({
+                        type: "post",
+                        url: '<?php echo esc_url(admin_url('admin-ajax.php')); ?>',
+                        data: {
+                            action: "umc_modal_info_admin_to_verified",
+                            userId: userId,
+                        },
+                        beforeSend: function() {},
+                        success: function(response) {
+                            if (response.success) {
+                                const data = response.data;
+                                if (data.error === -1) {
+                                    alert('Bạn không đủ quyền để thực hiện');
+                                } else {
+                                    $('#verifiedText').html('<b style="color:green">✅Đã xác minh</b>');
+                                    alert('Thành công!');
+                                }
+
+                            } else {
+                                alert('Đã có lỗi xảy ra');
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log('The following error occured: ' + textStatus, errorThrown);
+                        }
+                    });
+                });
+            })(jQuery);
+        </script>
 <?php
     }
 }
