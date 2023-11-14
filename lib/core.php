@@ -42,7 +42,7 @@ class UltimateMemberCustom
         //     $userId = get_current_user_id();
         //     $isVerify = (int) get_user_meta($userId, 'is_verified', true);
         //     if ($isVerify < 1) {
-        //         $message = __('Tài khoản của bạn chưa được kích hoạt nên không thể mua hàng');
+        //         $message = __('Tài khoản của bạn chưa được xác minh nên không thể mua hàng');
         //         wc_add_notice($message, 'error');
         //     }
         // }
@@ -54,7 +54,7 @@ class UltimateMemberCustom
             $userId = get_current_user_id();
             $isVerify = (int) get_user_meta($userId, 'is_verified', true);
             if (is_checkout() && $isVerify < 1) {
-                $message = __('Tài khoản của bạn chưa được kích hoạt nên không thể mua hàng');
+                $message = __('Tài khoản của bạn chưa được xác minh nên không thể mua hàng');
                 wc_add_notice($message, 'error');
                 wp_safe_redirect(esc_url(wc_get_cart_url()));
                 exit;
