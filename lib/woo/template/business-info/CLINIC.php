@@ -19,7 +19,7 @@ $ward_code = esc_attr(sanitize_text_field(get_user_meta($userId, 'ward_code', tr
 
 $billing_address_1 = esc_attr(sanitize_text_field(get_user_meta($userId, 'billing_address_1', true)));
 
-$business_image = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_image', true)));
+$business_image_file = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_image_file', true)));
 
 $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE);
 
@@ -103,11 +103,14 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULT
 	<fieldset>
 		<legend><?php esc_html_e('Hình ảnh nhà thuốc', 'woocommerce'); ?></legend>
 		<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-			<?php if (empty($business_image)) : ?>
-				<input multiple type="file" class="woocommerce-Input" name="business_image[]" id="">
+			<?php
+			$arrFile = json_decode(base64_decode($business_image_file), true);
+			?>
+			<?php if (empty($arrFile)) : ?>
+				<input multiple type="file" class="woocommerce-Input" name="business_image_file[]" id="">
 			<?php else : ?>
-				<?php foreach (unserialize($business_image) as $file) : ?>
-					<a style="color:red" href="<?php echo $file; ?>"><?php echo basename($file); ?></a>
+				<?php foreach ($arrFile as $file) : ?>
+					<img src="<?php echo esc_url($file); ?>" alt="Hình ảnh nhà thuốc">
 				<?php endforeach; ?>
 			<?php endif; ?>
 		</p>

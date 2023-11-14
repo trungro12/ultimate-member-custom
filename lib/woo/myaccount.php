@@ -47,10 +47,14 @@ class UltimateMemberCustom_Woo_MyAccount
         // format file data 
         if (is_array($fileData['name'])) {
             foreach ($fileData['name'] as $key => $value) {
+                $name = $fileData['name'][$key];
+                $tmpName = $fileData['tmp_name'][$key];
+                
                 $data = [
-                    'name' => $fileData['name'][$key],
-                    'tmp_name' => $fileData['tmp_name'][$key],
+                    'name' => $name,
+                    'tmp_name' => $tmpName,
                 ];
+
                 $fileName = self::__uploadFile($data);
                 if ($fileName) $arrFileName[] = $fileName;
             }
@@ -65,10 +69,12 @@ class UltimateMemberCustom_Woo_MyAccount
 
     static function __uploadFile($fileData)
     {
-
+        if (empty($fileData['name']) || empty($fileData['tmp_name'])) return null;
+        
+        $arrFileAllow = array_merge(ULTIMATEMEMBER_CUSTOM__FILETYPE, ULTIMATEMEMBER_CUSTOM__FILETYPE_IMAGE);
         // check file 
-        $fileExt = end(explode(".", $fileData['name']));
-        if (!in_array($fileExt, ULTIMATEMEMBER_CUSTOM__FILETYPE)) return null;
+        $fileExt = strtolower(end(explode(".", $fileData['name'])));
+        if (!in_array($fileExt, $arrFileAllow)) return null;
 
         $uploads = wp_upload_dir();
         $uploadDir = $uploads['basedir'];

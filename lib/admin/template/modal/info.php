@@ -137,6 +137,7 @@ class UltimateMemberCustomAdmin_Modal_Info
             <?php
             } else {
                 // template 2
+                $business_image_file = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_image_file', true)));
                 $business_name = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_name', true)));
                 $business_user_name = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_user_name', true)));
                 $arrBusinessDocumentType = umcGetListDocumentType2();
@@ -159,13 +160,24 @@ class UltimateMemberCustomAdmin_Modal_Info
                     <p><label><?php esc_html_e('Số giấy phép: ') ?></label><span><?php echo $license_number; ?></span></p>
                     <p><label><?php esc_html_e('Ngày cấp: ') ?></label><span><?php echo $license_date; ?></span></p>
                     <p><label><?php esc_html_e('Nơi cấp: ') ?></label><span><?php echo $city->full_name; ?></span></p>
-                    <?php if (!empty($arrFile = json_decode(base64_decode($document_type_license_file)))) : ?>
+                    <?php if (!empty($arrFile = json_decode(base64_decode($document_type_license_file), true))) : ?>
                         <p><label><?php esc_html_e('File Upload: ') ?></label><span><?php echo count($arrFile); ?> file</span></p>
                         <?php foreach ($arrFile as $file) : ?>
                             <a style="color:red" rel='noopener noreferrer nofollow' target="_blank" href="<?php echo $file; ?>"><?php echo basename($file); ?></a><br>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 <?php endforeach; ?>
+
+                <?php
+                $arrImageFile = json_decode(base64_decode($business_image_file), true);
+                ?>
+                <p><label><?php esc_html_e('Hình ảnh nhà thuốc: ') ?></label><span><?php echo $arrImageFile ? count($arrImageFile) : 0; ?> ảnh</span></p>
+                <?php if ($arrImageFile) : ?>
+                    <?php foreach ($arrImageFile as $file) : ?>
+                        <img src="<?php echo esc_url($file); ?>" alt="Hình ảnh nhà thuốc">
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
 
             <?php
             }
