@@ -14,7 +14,7 @@ if (!empty($_POST['action']) && !empty($_POST['_wpnonce']) && wp_verify_nonce($_
     $_POST  += $_FILES;
     // var_dump($_POST);die;
     foreach ($_POST as $key => $value) {
-        $key = sanitize_text_field($key);
+        $key = sanitize_key($key);
         $value = sanitize_text_field($value);
 
         if (strpos($key, "_file") !== false) {

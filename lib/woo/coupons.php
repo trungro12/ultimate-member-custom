@@ -1,7 +1,7 @@
 <?php
 
 // WooCommerce Coupon
-class UltimateMemberCustom_Coupons
+class UltimateMemberCustom_Woo_Coupons
 {
     public static function init()
     {
