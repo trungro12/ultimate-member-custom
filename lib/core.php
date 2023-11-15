@@ -54,9 +54,12 @@ class UltimateMemberCustom
     static function pluginActivation()
     {
         self::migrateDB();
+        flush_rewrite_rules();
     }
     static function pluginDeactivation()
     {
+        // self::deleteDB();
+        flush_rewrite_rules();
     }
 
     static function runSQL($sqlFile, $isDrop = false)
@@ -87,8 +90,7 @@ class UltimateMemberCustom
 
     static function migrateDB()
     {
-        $sqlFile = (ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/database/vietnamese-provinces/drop.sql');
-        self::runSQL($sqlFile);
+        self::deleteDB();
 
         // insert database 
         $sqlFile = (ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/database/vietnamese-provinces/create.sql');
@@ -98,6 +100,11 @@ class UltimateMemberCustom
         self::runSQL($sqlFile);
 
         self::migrateBank();
+    }
+
+    static function deleteDB(){
+        $sqlFile = (ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . '/database/vietnamese-provinces/drop.sql');
+        self::runSQL($sqlFile, true);
     }
 
 
@@ -202,7 +209,8 @@ class UltimateMemberCustom
 
     static function migrateBank()
     {
-        $jsonBank = json_decode(self::getUrl('https://api.vietqr.io/v2/banks'), true);
+        // $jsonBank = json_decode(self::getUrl('https://api.vietqr.io/v2/banks'), true);
+        $jsonBank = json_decode(self::jsonBank(), true);
         if (!empty($jsonBank['data'])) {
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             foreach ($jsonBank['data'] as $bank) {
@@ -219,6 +227,10 @@ class UltimateMemberCustom
 
 
 
+    static function jsonBank(){
+        $json = file_get_contents(ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR . "/lib/assets/json/banks.json");
+        return $json;
+    }
 
 
 
