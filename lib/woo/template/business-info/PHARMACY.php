@@ -18,6 +18,8 @@ $ward_code = esc_attr(sanitize_text_field(get_user_meta($userId, 'ward_code', tr
 
 $billing_address_1 = esc_attr(sanitize_text_field(get_user_meta($userId, 'billing_address_1', true)));
 
+$allowFileType = "." . implode(", .", ULTIMATEMEMBER_CUSTOM__FILETYPE);
+
 ?>
 
 <form action="" method="post" enctype="multipart/form-data">
@@ -43,7 +45,7 @@ $billing_address_1 = esc_attr(sanitize_text_field(get_user_meta($userId, 'billin
 			$arrFile = json_decode(base64_decode($document_type_file), true);
 			?>
 			<?php if (empty($document_type_file) || empty($arrFile)) : ?>
-				<input multiple required type="file" class="woocommerce-Input woocommerce-Input--password input-text" name="document_type_file" id="">
+				<input multiple required type="file" accept="<?php echo $allowFileType; ?>" class="woocommerce-Input woocommerce-Input--password input-text" name="document_type_file" id="">
 			<?php else : ?>
 				<?php foreach ($arrFile as $file) : ?>
 					<?php

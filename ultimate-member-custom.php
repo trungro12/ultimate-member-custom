@@ -17,8 +17,8 @@ if (!function_exists('add_action')) {
 	echo 'Không thể chạy plugins trong website!';
 	exit;
 }
-define('ULTIMATEMEMBER_CUSTOM__FILETYPE', ['pdf', 'txt']);
-define('ULTIMATEMEMBER_CUSTOM__FILETYPE_IMAGE', ['png', 'jpg', 'jpeg']);
+define('ULTIMATEMEMBER_CUSTOM__FILETYPE', ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx']);
+// define('ULTIMATEMEMBER_CUSTOM__FILETYPE_IMAGE', ['png', 'jpg', 'jpeg']);
 define('ULTIMATEMEMBER_CUSTOM__PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('ULTIMATEMEMBER_CUSTOM__PLUGIN_URL', plugin_dir_url(__FILE__));
 

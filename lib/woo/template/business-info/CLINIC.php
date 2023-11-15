@@ -21,7 +21,8 @@ $billing_address_1 = esc_attr(sanitize_text_field(get_user_meta($userId, 'billin
 
 $business_image_file = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_image_file', true)));
 
-$allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULTIMATEMEMBER_CUSTOM__FILETYPE);
+$allowFileType = "." . implode(", .", ULTIMATEMEMBER_CUSTOM__FILETYPE);
+$allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . $allowFileType;
 
 ?>
 
@@ -86,7 +87,7 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULT
 				$arrFile = json_decode(base64_decode($document_type_license_file), true);
 				?>
 				<?php if (empty($document_type_license_file) || empty($arrFile)) : ?>
-					<input multiple type="file" class="woocommerce-Input" name="<?php echo $name . 'license_file[]'; ?>" id=""><br>
+					<input multiple type="file" accept="<?php echo $allowFileType; ?>" class="woocommerce-Input" name="<?php echo $name . 'license_file[]'; ?>" id=""><br>
 					<b style="color:red"><?php echo $allowFileTypeMsg; ?></b>
 				<?php else : ?>
 					<?php foreach ($arrFile as $file) : ?>
@@ -110,7 +111,7 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . implode(", ", ULT
 			$arrFile = json_decode(base64_decode($business_image_file), true);
 			?>
 			<?php if (empty($arrFile)) : ?>
-				<input multiple type="file" class="woocommerce-Input" name="business_image_file[]" id="">
+				<input multiple accept="image/*" type="file" class="woocommerce-Input" name="business_image_file[]" id="">
 			<?php else : ?>
 				<?php foreach ($arrFile as $file) : ?>
 					<img src="<?php echo esc_url($file); ?>" alt="Hình ảnh nhà thuốc">

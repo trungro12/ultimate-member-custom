@@ -163,7 +163,7 @@ class UltimateMemberCustom_Woo_MyAccount
     {
         if (empty($fileData['name']) || empty($fileData['tmp_name'])) return null;
 
-        $arrFileAllow = array_merge(ULTIMATEMEMBER_CUSTOM__FILETYPE, ULTIMATEMEMBER_CUSTOM__FILETYPE_IMAGE);
+        $arrFileAllow = ULTIMATEMEMBER_CUSTOM__FILETYPE;
         // check file 
         $fileExt = strtolower(end(explode(".", $fileData['name'])));
         if (!in_array($fileExt, $arrFileAllow)) return null;
