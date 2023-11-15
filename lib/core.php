@@ -185,7 +185,7 @@ class UltimateMemberCustom
     {
         global $wpdb;
         $table = 'banks';
-        $query = $wpdb->prepare("SELECT * FROM $table;");
+        $query = $wpdb->prepare("SELECT * FROM $table order by code asc;");
         $results = $wpdb->get_results($query);
         return $results;
     }

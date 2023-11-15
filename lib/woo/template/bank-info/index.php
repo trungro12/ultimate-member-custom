@@ -35,7 +35,7 @@ if (!empty($_POST['action']) && !empty($_POST['_wpnonce']) && wp_verify_nonce($_
 
 ?>
 <ul class="woocommerce-error" role="alert" style="<?php echo $errorMsg ? '' : 'display: none;'; ?>">
-    <?php foreach($errorMsg as $e): ?>
+    <?php foreach ($errorMsg as $e) : ?>
         <li><?php echo $e; ?></li>
     <?php endforeach; ?>
 </ul>
@@ -50,12 +50,11 @@ if (!empty($_POST['action']) && !empty($_POST['_wpnonce']) && wp_verify_nonce($_
             <input type="text" required class="woocommerce-Input" name="bank_account_number" placeholder="123456789" value="<?php echo $bank_account_number; ?>">
 
             <label for="bank_account_holder_name">Chọn ngân hàng <span class="required">*</span></label>
-            <input type="text" required value="<?php echo $bank_code; ?>" class="woocommerce-Input" name="bank_code" list="banks">
-            <datalist id="banks">
+            <select required name="bank_code" id="banks">
                 <?php foreach ($bankList as $bank) : ?>
-                    <option value="<?php echo esc_attr($bank->code); ?>"><?php echo esc_html($bank->name . " [$bank->short_name]"); ?></option>
+                    <option <?php echo $bank_code == $bank->code ? 'selected' : ''; ?> value="<?php echo esc_attr($bank->code); ?>"><?php echo esc_html("$bank->code - " . $bank->name . " [$bank->short_name]"); ?></option>
                 <?php endforeach; ?>
-            </datalist>
+            </select>
             <input type="hidden" name="action" value="save_bank_info">
             <?php
             wp_nonce_field('save_bank_info');
