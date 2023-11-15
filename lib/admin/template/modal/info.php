@@ -144,7 +144,7 @@ class UltimateMemberCustomAdmin_Modal_Info
             <?php
             if (in_array($businessType, umcGetListBusinessTypeId1())) {
                 // template 1
-                $arrBusinessDocumentType = umcGetListDocumentType();
+                $arrBusinessDocumentType = umcGetListDocumentType($businessType);
                 $document_type = esc_attr(sanitize_text_field(get_user_meta($userId, 'document_type', true)));
                 $document_type_file = esc_attr(sanitize_text_field(get_user_meta($userId, 'document_type_file', true)));
 
@@ -161,7 +161,7 @@ class UltimateMemberCustomAdmin_Modal_Info
                 $business_image_file = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_image_file', true)));
                 $business_name = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_name', true)));
                 $business_user_name = esc_attr(sanitize_text_field(get_user_meta($userId, 'business_user_name', true)));
-                $arrBusinessDocumentType = umcGetListDocumentType2();
+                $arrBusinessDocumentType = umcGetListDocumentType2($businessType);
             ?>
                 <p><label><?php esc_html_e('Tên nhà thuốc/phòng khám: ') ?></label><span><?php echo $business_name; ?></span></p>
                 <p><label><?php esc_html_e('Tên người đại diện pháp luật: ') ?></label><span><?php echo $business_user_name; ?></span></p>

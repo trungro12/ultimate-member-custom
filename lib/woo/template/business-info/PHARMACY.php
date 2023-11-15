@@ -4,7 +4,7 @@
 // $userId = get_current_user_id();
 // $businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: 1;
 // $businessTypeName = $arrBusinessType[$businessType];
-$arrBusinessDocumentType = umcGetListDocumentType();
+$arrBusinessDocumentType = umcGetListDocumentType($businessType);
 $arrCity = UltimateMemberCustom::getCityList();
 
 
