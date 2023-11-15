@@ -54,12 +54,12 @@ class UltimateMemberCustom
     static function pluginActivation()
     {
         self::migrateDB();
-        flush_rewrite_rules();
+        // flush_rewrite_rules();
     }
     static function pluginDeactivation()
     {
         // self::deleteDB();
-        flush_rewrite_rules();
+        // flush_rewrite_rules();
     }
 
     static function runSQL($sqlFile, $isDrop = false)
