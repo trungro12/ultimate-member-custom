@@ -8,6 +8,7 @@ class UltimateMemberCustom_Register
     {
         add_shortcode('umc_business_type', 'UltimateMemberCustom_Register::__htmlBusinessType');
         self::__addBusinessTypeUserMetaSubmit();
+        self::redirectUserAfterRegisterandLogin();
     }
 
 
@@ -15,7 +16,7 @@ class UltimateMemberCustom_Register
     {
         $arrBusinessType = umcGetListBusinessType();
 ?>
-        <div id="business_type" class="um-field um-field-radio  um-field-business_type um-field-radio um-field-type_radio"  aria-invalid="false">
+        <div id="business_type" class="um-field um-field-radio  um-field-business_type um-field-radio um-field-type_radio" aria-invalid="false">
             <div class="um-field-label"><label>Tên loại hình</label>
                 <div class="um-clear"></div>
             </div>
@@ -46,6 +47,18 @@ class UltimateMemberCustom_Register
                 $args['business_type'] = sanitize_text_field($args['business_type']);
                 update_user_meta($userId, 'business_type', $args['business_type']);
             }
+        }
+    }
+
+    static function redirectUserAfterRegisterandLogin()
+    {
+        if (is_user_logged_in()) return;
+
+        add_action('user_register', '__redirectUserRegisterToBusinessInfo');
+        function __redirectUserRegisterToBusinessInfo($user_id)
+        {
+            wp_safe_redirect(esc_url(wc_get_account_endpoint_url('business-info')));
+            die;
         }
     }
 }
