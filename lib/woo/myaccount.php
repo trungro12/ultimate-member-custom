@@ -43,7 +43,7 @@ class UltimateMemberCustom_Woo_MyAccount
                     'address' => $address,
                 ];
             }
-            update_user_meta($userId, 'invoice_export_info', json_encode($arrInvoiceExportInfo));
+            update_user_meta($userId, 'invoice_export_info', json_encode($arrInvoiceExportInfo, JSON_UNESCAPED_UNICODE));
             wp_send_json_success();
             die();
         }
@@ -181,7 +181,7 @@ class UltimateMemberCustom_Woo_MyAccount
             mkdir($uploadDir, 0755, true);
         }
 
-        $fileName = self::hashName(basename($fileData['name']));
+        $fileName = self::hashName(basename($fileData['name'])) . "." . $fileExt;
 
         $uploadFile = $uploadDir . $fileName;
         $fileUrl = $uploadUrl . $fileName;
@@ -195,6 +195,6 @@ class UltimateMemberCustom_Woo_MyAccount
 
     static function hashName($str)
     {
-        return "document_" . md5($str . rand(1, 100)) . "_" . $str;
+        return "document_" . md5($str) . "_" . time();
     }
 }
