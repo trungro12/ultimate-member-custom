@@ -22,7 +22,7 @@ class UltimateMemberCustom_Register
             </div>
             <div class="um-field-area">
                 <?php foreach ($arrBusinessType as $id => $name) : ?>
-                    <label class="um-field-radio  um-field-half "><input <?php echo $id == 1 ? 'checked' : '' ?> type="radio" name="business_type" value="<?php echo $id; ?>"><span class="um-field-radio-state"><i class="um-icon-android-radio-button-<?php echo $id == 1 ? 'on' : 'off' ?>"></i></span><span class="um-field-radio-option"><?php echo $name; ?></span></label>
+                    <label class="um-field-radio  um-field-half <?php echo $id == 1 ? 'active' : '' ?>"><input type="radio" name="business_type" value="<?php echo $id; ?>"><span class="um-field-radio-state"><i class="um-icon-android-radio-button-<?php echo $id == 1 ? 'on' : 'off' ?>"></i></span><span class="um-field-radio-option"><?php echo $name; ?></span></label>
                 <?php endforeach; ?>
 
             </div>
@@ -39,14 +39,12 @@ class UltimateMemberCustom_Register
 
     public static function __addBusinessTypeUserMetaSubmit()
     {
-        add_action("um_registration_complete", "umc_business_type_add_metadata", 10, 2);
-        function umc_business_type_add_metadata($userId, $args)
+        add_action("user_register", "umc_business_type_add_metadata", 1, 1);
+        function umc_business_type_add_metadata($userId)
         {
-
-            if (isset($args['business_type']) && !empty($args['business_type'])) {
-                $args['business_type'] = sanitize_text_field($args['business_type']);
-                update_user_meta($userId, 'business_type', $args['business_type']);
-            }
+            if (empty($userId)) return;
+            $business_type = empty($_POST['business_type']) ? UMC_BUSINESS_TYPE_PHARMACY : sanitize_text_field($_POST['business_type']);
+            update_user_meta($userId, 'business_type', $business_type);
         }
     }
 

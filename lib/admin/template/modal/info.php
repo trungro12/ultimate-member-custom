@@ -132,7 +132,7 @@ class UltimateMemberCustomAdmin_Modal_Info
         // $attrs = shortcode_atts( ['userid' => ''], $attrs );
         $userId = $attrs['userid'];
         $arrBusinessType = umcGetListBusinessType();
-        $businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: 1;
+        $businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: UMC_BUSINESS_TYPE_PHARMACY;
         $businessTypeName = $arrBusinessType[$businessType];
         $isVerified = (int) sanitize_text_field(get_user_meta($userId, 'is_verified', true)) ?: 0;
         $isVerified = $isVerified ? '<b style="color:green">✅Đã xác minh</b>' : '<b style="color:red">Chưa xác minh <button style="cursor: pointer; border: 1px; background: #ddd; border-radius: 4px;" id="toVerified" data-id="' . $userId . '">Chuyển sang trạng thái ✅Đã xác minh</button></b>';

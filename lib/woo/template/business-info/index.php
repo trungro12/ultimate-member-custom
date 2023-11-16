@@ -4,7 +4,7 @@
 defined('ABSPATH') || exit;
 $arrBusinessType = umcGetListBusinessType();
 $userId = get_current_user_id();
-$businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: 1;
+$businessType = (int) sanitize_text_field(get_user_meta($userId, 'business_type', true)) ?: UMC_BUSINESS_TYPE_PHARMACY;
 $businessTypeName = $arrBusinessType[$businessType];
 
 if (!empty($_POST['action']) && !empty($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], $_POST['action'])) {
