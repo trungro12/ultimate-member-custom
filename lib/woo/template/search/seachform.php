@@ -38,7 +38,7 @@ class UltimateMemberCustom_SearchForm
                 <option value="ATTR">Hoạt Chất</option>
             </select>
         </div>
-        <script>
+        <script nowprocket>
             (function($) {
                 $(function() {
                     $('#search_by').appendTo('form.searchform');
