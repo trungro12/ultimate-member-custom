@@ -12,11 +12,13 @@ class UltimateMemberCustomAdmin_Modal_Info
 
     static function modifyDefaultModal()
     {
-        // add_filter( 'um_admin_user_row_actions', function($actions){
-        //     // unset($actions['view']);
-        //     unset($actions['view_info']);
-        //     return $actions;
-        // });
+        add_filter( 'um_admin_user_row_actions', function($actions, $userId){
+            if (empty($actions['view_info']) && current_user_can( 'administrator' ) ) {
+                $actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller"
+				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $userId ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
+			}
+            return $actions;
+        }, 10, 2);
         add_action('admin_footer', function () {
 ?>
             <script>
@@ -30,7 +32,7 @@ class UltimateMemberCustomAdmin_Modal_Info
 
                                 $('#UM_preview_registration').find('.um-admin-modal-body').empty();
 
-                                waitForElementToExist('#UM_preview_registration .um-admin-infobox .um-row').then(e => {
+                                waitForElementToExist('#UM_preview_registration .um-admin-infobox').then(e => {
                                     $('#UM_preview_registration .um-admin-infobox').append('<p style="font-weight:bold;color:red" id="loading">Đang tải thông tin doanh nghiệp...</p>');
                                     $.ajax({
                                         type: "post",
