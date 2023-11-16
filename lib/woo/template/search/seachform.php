@@ -31,11 +31,13 @@ class UltimateMemberCustom_SearchForm
     static function __htmlSearchFormInputType()
     {
 ?>
-        <select style="display: inline-block; max-width: 25%; position: absolute; right: 50px; border-radius: 0; border-right: 0;" name="search_by" id="search_by">
-            <!-- <option value="PRODUCT_AND_ATTR">Thuốc & Hoạt Chất</option> -->
-            <option value="PRODUCT">Thuốc</option>
-            <option value="ATTR">Hoạt Chất</option>
-        </select>
+        <div style="display:none">
+            <select style="display: inline-block; max-width: 25%; position: absolute; right: 50px; border-radius: 0; border-right: 0;" name="search_by" id="search_by">
+                <!-- <option value="PRODUCT_AND_ATTR">Thuốc & Hoạt Chất</option> -->
+                <option value="PRODUCT">Thuốc</option>
+                <option value="ATTR">Hoạt Chất</option>
+            </select>
+        </div>
         <script>
             (function($) {
                 $(function() {
