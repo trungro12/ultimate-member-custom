@@ -54,6 +54,8 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . $allowFileType;
 
 		$document_type_license_file = esc_attr(sanitize_text_field(get_user_meta($userId, $name . 'license_file', true)));
 
+		$arrFile = json_decode(base64_decode($document_type_license_file), true);
+		$isFileEmpty = empty($document_type_license_file) || empty($arrFile) ? true : false;
 		?>
 		<fieldset>
 			<legend><?php esc_html_e($documentTypeName, 'woocommerce'); ?></legend>
@@ -61,18 +63,18 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . $allowFileType;
 			<div class="row">
 				<div class="col-md-4">
 					<label><?php esc_html_e('Số giấy phép', 'woocommerce'); ?></label>
-					<input type="text" class="woocommerce-Input" name="<?php echo $name . 'license_number'; ?>" value="<?php echo $document_type_license_number; ?>">
+					<input <?php echo $isFileEmpty ? "required" : "disabled"; ?> type="text" class="woocommerce-Input" name="<?php echo $name . 'license_number'; ?>" value="<?php echo $document_type_license_number; ?>">
 				</div>
 
 				<div class="col-md-4">
 					<label><?php esc_html_e('Ngày cấp', 'woocommerce'); ?></label>
-					<input type="text" class="woocommerce-Input datepicker" name="<?php echo $name . 'license_date'; ?>" value="<?php echo $document_type_license_date; ?>">
+					<input <?php echo $isFileEmpty ? "required" : "disabled"; ?> type="text" class="woocommerce-Input datepicker" name="<?php echo $name . 'license_date'; ?>" value="<?php echo $document_type_license_date; ?>">
 
 				</div>
 
 				<div class="col-md-4">
 					<label><?php esc_html_e('Nơi cấp', 'woocommerce'); ?></label>
-					<select name="<?php echo $name . 'license_city_code'; ?>">
+					<select <?php echo $isFileEmpty ? "required" : "disabled"; ?> name="<?php echo $name . 'license_city_code'; ?>">
 						<option value="">Chọn Tỉnh/Thành Phố</option>
 						<?php foreach ($arrCity as $city) : ?>
 							<option <?php echo $document_type_license_city_code == $city->code ? 'selected' : ''; ?> value="<?php echo $city->code; ?>"><?php echo $city->full_name; ?></option>
@@ -83,10 +85,8 @@ $allowFileTypeMsg = 'Chỉ hỗ trợ các file có đuôi ' . $allowFileType;
 
 			</p>
 			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-				<?php
-				$arrFile = json_decode(base64_decode($document_type_license_file), true);
-				?>
-				<?php if (empty($document_type_license_file) || empty($arrFile)) : ?>
+				
+				<?php if ($isFileEmpty) : ?>
 					<input multiple type="file" accept="<?php echo $allowFileType; ?>" class="woocommerce-Input" name="<?php echo $name . 'license_file[]'; ?>" id=""><br>
 					<b style="color:red"><?php echo $allowFileTypeMsg; ?></b>
 				<?php else : ?>

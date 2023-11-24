@@ -31,9 +31,13 @@ $allowFileType = "." . implode(", .", ULTIMATEMEMBER_CUSTOM__FILETYPE);
 
 	<fieldset>
 		<!-- <legend></legend> -->
+		<?php
+		$arrFile = json_decode(base64_decode($document_type_file), true);
+		$isFileEmpty = empty($document_type_file) || empty($arrFile) ? true : false;
+		?>
 		<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
 			<label><?php esc_html_e('Bấm vào để chọn loại giấy tờ', 'woocommerce'); ?>&nbsp;<span class="required">*</span></label>
-			<select name="document_type" id="">
+			<select <?php echo $isFileEmpty ? "required" : "disabled"; ?> name="document_type" id="">
 				<?php foreach ($arrBusinessDocumentType as $id => $documentType) : ?>
 					<option <?php echo $document_type == $id ? 'selected' : ''; ?> value="<?php echo $id; ?>"><?php echo $documentType; ?></option>
 				<?php endforeach; ?>
@@ -41,9 +45,6 @@ $allowFileType = "." . implode(", .", ULTIMATEMEMBER_CUSTOM__FILETYPE);
 		</p>
 
 		<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-			<?php
-			$arrFile = json_decode(base64_decode($document_type_file), true);
-			?>
 			<?php if (empty($document_type_file) || empty($arrFile)) : ?>
 				<input multiple required type="file" accept="<?php echo $allowFileType; ?>" class="woocommerce-Input woocommerce-Input--password input-text" name="document_type_file" id="">
 			<?php else : ?>
