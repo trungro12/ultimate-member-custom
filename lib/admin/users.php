@@ -5,7 +5,7 @@ class UltimateMemberCustom_Admin_Users
     static function init()
     {
         self::showUserVerifyFieldInEditUsers();
-        self::showUserUploadFileFieldInEditUsers();
+        // self::showUserUploadFileFieldInEditUsers();
         self::showCustomFieldInUserAdminPanel();
     }
 
